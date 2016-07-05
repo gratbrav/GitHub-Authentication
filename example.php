@@ -4,7 +4,7 @@
      * place this script in your github redirect file
      */
 
-    require_once 'Class/autoload.php';
+    require_once 'Github_Login.php';
 
     $config = array(
         'client_id' => 'github client id',
