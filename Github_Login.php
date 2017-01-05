@@ -73,12 +73,12 @@ class Github_Login
     protected function getAccess($code) 
     {
         $settings = [];
-        $settings['post_data'] = array(
+        $settings['post_data'] = [
             'client_id' => $this->config['client_id'] ,
             'redirect_uri' => $this->config['redirect_url'] ,
             'client_secret' => $this->config['client_secret'],
             'code' => $code ,
-        );
+        ];
 
         $url = 'https://github.com/login/oauth/access_token';
         $result = $this->sendRequest($url, $settings);
@@ -135,9 +135,9 @@ class Github_Login
 
         // set header
         if (isset($opt['access_token']) && $opt['access_token'] != '') {
-            curl_setopt($curl, CURLOPT_HTTPHEADER, array('User-Agent: ' . $this->config['app_name'], 'Accept: application/json', 'Authorization: Bearer ' . $opt['access_token']));
+            curl_setopt($curl, CURLOPT_HTTPHEADER, ['User-Agent: ' . $this->config['app_name'], 'Accept: application/json', 'Authorization: Bearer ' . $opt['access_token']]);
         } else {
-            curl_setopt($curl, CURLOPT_HTTPHEADER, array('Accept: application/json'));
+            curl_setopt($curl, CURLOPT_HTTPHEADER, ['Accept: application/json']);
         }
 
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
