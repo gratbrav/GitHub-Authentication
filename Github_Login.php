@@ -126,6 +126,7 @@ class Github_Login
     {
         $curl = curl_init();
         curl_setopt($curl, CURLOPT_URL, $url);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
 
         // post data
         if (isset($opt['post_data']) && is_array($opt['post_data'])) {
@@ -135,12 +136,19 @@ class Github_Login
 
         // set header
         if (isset($opt['access_token']) && $opt['access_token'] != '') {
-            curl_setopt($curl, CURLOPT_HTTPHEADER, ['User-Agent: ' . $this->config['app_name'], 'Accept: application/json', 'Authorization: Bearer ' . $opt['access_token']]);
+            $header = [
+                'User-Agent: ' . $this->config['app_name'],
+                'Accept: application/json',
+                'Authorization: Bearer ' . $opt['access_token']
+            ];
         } else {
-            curl_setopt($curl, CURLOPT_HTTPHEADER, ['Accept: application/json']);
+            $header = [
+                'Accept: application/json'
+            ];
         }
 
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($curl, CURLOPT_HTTPHEADER, $header);
+
         $result = curl_exec($curl);
         curl_close($curl);
 
