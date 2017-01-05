@@ -28,7 +28,7 @@ class Github_Login
 
     /**
      * Authenticate
-     * 
+     *
      * @param array $GET
      */
     public function authenticate($GET)
@@ -40,11 +40,9 @@ class Github_Login
         $code = filter_var($GET['code'], FILTER_SANITIZE_STRING);
 
         $accessToken = $this->getAccess($code);
-
-        $userData = $this->getUser($accessToken);
-
         $email = $this->getEmail($accessToken);
 
+        $userData = $this->getUser($accessToken);
         $userData['email'] = $email;
 
         return $userData;
@@ -57,8 +55,8 @@ class Github_Login
     {
         $url = 'https://github.com/login/oauth/authorize';
 
-        $params = '?client_id=' . $this->config['client_id'] 
-           . '&redirect_uri=' . $this->config['redirect_url'] 
+        $params = '?client_id=' . $this->config['client_id']
+           . '&redirect_uri=' . $this->config['redirect_url']
            . '&scope=user';
 
         header('Location: ' . $url . $params);
@@ -67,17 +65,17 @@ class Github_Login
 
     /**
      * Get access token
-     * 
+     *
      * @param string $code
      */
     protected function getAccess($code) 
     {
         $settings = [];
         $settings['post_data'] = [
-            'client_id' => $this->config['client_id'] ,
-            'redirect_uri' => $this->config['redirect_url'] ,
+            'client_id' => $this->config['client_id'],
+            'redirect_uri' => $this->config['redirect_url'],
             'client_secret' => $this->config['client_secret'],
-            'code' => $code ,
+            'code' => $code,
         ];
 
         $url = 'https://github.com/login/oauth/access_token';
@@ -89,7 +87,7 @@ class Github_Login
 
     /**
      * Get user data
-     * 
+     *
      * @param string $accessToken
      */
     protected function getUser($accessToken)
@@ -98,12 +96,12 @@ class Github_Login
         $url = 'https://api.github.com/user?access_token=' . $accessToken;
         $result = $this->sendRequest($url, $settings);
 
-        return json_decode($result , true);
+        return json_decode($result, true);
     }
 
     /**
      * Get email
-     * 
+     *
      * @param string $accessToken
      */
     protected function getEmail($accessToken)
@@ -111,14 +109,14 @@ class Github_Login
         $settings = ['access_token' => $accessToken];
         $url = 'https://api.github.com/user/emails?access_token=' . $accessToken;
         $result = $this->sendRequest($url, $settings);
-         
-        $emails = json_decode($result , true);
+
+        $emails = json_decode($result, true);
         return $emails[0]['email'];
     }
 
     /**
      * Send request
-     * 
+     *
      * @param string $url
      * @param array $opt
      */
@@ -154,4 +152,5 @@ class Github_Login
 
         return $result;
     }
+
 }
