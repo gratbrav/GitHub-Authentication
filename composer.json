@@ -1,4 +1,7 @@
 {
-  "name": "gratbrav/GitHub-Authentication",
-  "description": "Basic GitHub Authentication"
+    "name": "gratbrav/GitHub-Authentication",
+    "description": "Basic GitHub Authentication",
+    "require": {
+       "php": ">=5.4"
+    }
 }
