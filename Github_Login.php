@@ -55,8 +55,8 @@ class Github_Login
     {
         $url = 'https://github.com/login/oauth/authorize';
 
-        $params = '?client_id=' . $this->config['client_id']
-           . '&redirect_uri=' . $this->config['redirect_url']
+        $params = '?client_id=' . $this->getConfig('client_id')
+           . '&redirect_uri=' . $this->getConfig('redirect_url')
            . '&scope=user';
 
         header('Location: ' . $url . $params);
@@ -72,9 +72,9 @@ class Github_Login
     {
         $settings = [];
         $settings['post_data'] = [
-            'client_id' => $this->config['client_id'],
-            'redirect_uri' => $this->config['redirect_url'],
-            'client_secret' => $this->config['client_secret'],
+            'client_id' => $this->getConfig('client_id'),
+            'redirect_uri' => $this->getConfig('redirect_url'),
+            'client_secret' => $this->getConfig('client_secret'),
             'code' => $code,
         ];
 
@@ -135,7 +135,7 @@ class Github_Login
         // set header
         if (isset($opt['access_token']) && $opt['access_token'] !== '') {
             $header = [
-                'User-Agent: ' . $this->config['app_name'],
+                'User-Agent: ' . $this->getConfig('app_name'),
                 'Accept: application/json',
                 'Authorization: Bearer ' . $opt['access_token']
             ];
@@ -153,4 +153,18 @@ class Github_Login
         return $result;
     }
 
+    /**
+     * Get config setting from key
+     * 
+     * @param string $key  Config param
+     * @return string
+     */
+    protected function getConfig($key)
+    {
+        if (isset($this->config[$key])) {
+            return $this->config[$key];
+        }
+
+        return '';
+    }
 }
