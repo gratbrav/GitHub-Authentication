@@ -14,7 +14,14 @@ class Github_Login
      * GitHub Configuration
      * @var array
      */
-    protected $config;
+    protected $config = [
+        'api' => [
+            'authorize' => 'https://github.com/login/oauth/authorize',
+            'access_token' => 'https://github.com/login/oauth/access_token',
+            'user' => 'https://api.github.com/user',
+            'email' => 'https://api.github.com/user/emails',
+        ],
+    ];
 
     /**
      * Constructor
@@ -23,7 +30,7 @@ class Github_Login
      */
     public function __construct($config)
     {
-        $this->config = (array)$config;
+        $this->config = array_merge($this->config, $config);
     }
 
     /**
@@ -53,7 +60,7 @@ class Github_Login
      */
     protected function authorize()
     {
-        $url = 'https://github.com/login/oauth/authorize';
+        $url = $this->getConfig('api')['authorize'];
 
         $params = '?client_id=' . $this->getConfig('client_id')
            . '&redirect_uri=' . $this->getConfig('redirect_url')
@@ -78,7 +85,8 @@ class Github_Login
             'code' => $code,
         ];
 
-        $url = 'https://github.com/login/oauth/access_token';
+        $url = $this->getConfig('api')['access_token'];
+
         $result = $this->sendRequest($url, $settings);
 
         $r = json_decode($result, true);
@@ -92,8 +100,10 @@ class Github_Login
      */
     protected function getUser($accessToken)
     {
-        $settings = ['access_token' => $accessToken];
-        $url = 'https://api.github.com/user?access_token=' . $accessToken;
+        $settings = [
+            'access_token' => $accessToken,
+        ];
+        $url = $this->getConfig('url')['user'] . '?access_token=' . $accessToken;
         $result = $this->sendRequest($url, $settings);
 
         return json_decode($result, true);
@@ -106,8 +116,10 @@ class Github_Login
      */
     protected function getEmail($accessToken)
     {
-        $settings = ['access_token' => $accessToken];
-        $url = 'https://api.github.com/user/emails?access_token=' . $accessToken;
+        $settings = [
+            'access_token' => $accessToken,
+        ];
+        $url = $this->getConfig('url')['email'] . '?access_token=' . $accessToken;
         $result = $this->sendRequest($url, $settings);
 
         $emails = json_decode($result, true);
@@ -137,11 +149,11 @@ class Github_Login
             $header = [
                 'User-Agent: ' . $this->getConfig('app_name'),
                 'Accept: application/json',
-                'Authorization: Bearer ' . $opt['access_token']
+                'Authorization: Bearer ' . $opt['access_token'],
             ];
         } else {
             $header = [
-                'Accept: application/json'
+                'Accept: application/json',
             ];
         }
 
