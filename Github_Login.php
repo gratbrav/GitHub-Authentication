@@ -45,7 +45,7 @@ class Github_Login
         $userData = $this->getUser($accessToken);
         $userData['email'] = $email;
 
-        return $userData;
+        return (array)$userData;
     }
 
     /**
@@ -82,7 +82,7 @@ class Github_Login
         $result = $this->sendRequest($url, $settings);
 
         $r = json_decode($result, true);
-        return $r['access_token'];
+        return (string)$r['access_token'];
     }
 
     /**
@@ -111,7 +111,7 @@ class Github_Login
         $result = $this->sendRequest($url, $settings);
 
         $emails = json_decode($result, true);
-        return $emails[0]['email'];
+        return (string)$emails[0]['email'];
     }
 
     /**
@@ -133,7 +133,7 @@ class Github_Login
         }
 
         // set header
-        if (isset($opt['access_token']) && $opt['access_token'] != '') {
+        if (isset($opt['access_token']) && $opt['access_token'] !== '') {
             $header = [
                 'User-Agent: ' . $this->config['app_name'],
                 'Accept: application/json',
